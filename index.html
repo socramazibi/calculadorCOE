@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora COE</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+        <h1 class="text-2xl font-bold text-blue-600 mb-6">Calculadora COE</h1>
+        <label class="block text-sm font-medium">Días Cotizados:</label>
+        <input type="number" id="dias" min="0" class="w-full p-3 border rounded mt-1 mb-4" placeholder="0">
+        <label class="block text-sm font-medium">Coeficiente Reductor:</label>
+        <input type="number" id="coeficiente" min="0" max="1" step="0.01" class="w-full p-3 border rounded mt-1 mb-4" placeholder="0.00">
+        <button onclick="calcularCOE()" class="bg-blue-500 text-white w-full py-3 rounded-lg font-bold hover:bg-blue-600 transition duration-300">Calcular</button>
+        <button onclick="limpiarCampos()" class="mt-4 bg-gray-500 text-white w-full py-3 rounded-lg font-bold hover:bg-gray-600 transition duration-300">Limpiar</button>
+        <div id="resultado" class="mt-6 p-8 rounded-md border text-center text-lg"></div>
+    </div>
+    <script>
+        function calcularCOE() {
+            // Obtiene el número de días cotizados del campo de entrada.
+            const dias = parseFloat(document.getElementById('dias').value);
+            // Obtiene el coeficiente reductor del campo de entrada.
+            const coeficiente = parseFloat(document.getElementById('coeficiente').value);
+            
+            // Valida que los inputs sean números válidos.
+            if (isNaN(dias) || isNaN(coeficiente) || dias < 0 || coeficiente < 0 || coeficiente > 1) {
+                // Muestra un mensaje de error si los inputs no son válidos.
+                document.getElementById('resultado').innerHTML = 'Por favor, introduce valores válidos (días ≥ 0, coeficiente entre 0 y 1).';
+                return;
+            }
+            
+            // Calcula la reducción en años.
+            let reduccionAnios = (dias * coeficiente) / 365;
+            // Obtiene la parte entera de la reducción en años.
+            let anios = Math.floor(reduccionAnios);
+            // Calcula la parte fraccionaria de la reducción en años y la convierte a meses.
+            let meses = Math.round((reduccionAnios - anios) * 12);
+            
+            // Muestra el resultado en el elemento con el id "resultado".
+            document.getElementById('resultado').innerHTML = `Reducción: ${anios.toLocaleString('es-ES')} años y ${meses.toLocaleString('es-ES')} meses.`;
+        }
+        
+        function limpiarCampos() {
+            document.getElementById('dias').value = '';
+            document.getElementById('coeficiente').value = '';
+            document.getElementById('resultado').innerHTML = '';
+        }
+        setTimeout(() => {
+            const resultDiv = document.getElementById('resultado');
+            resultDiv.classList.add('animate-pulse');
+            setTimeout(() => {
+                resultDiv.classList.remove('animate-pulse');
+            }, 3000);
+        }, 100);
+    </script>
+</body>
+</html>
